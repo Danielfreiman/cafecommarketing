@@ -1,13 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Project } from "@/data/site";
 
 export function ProjectCard({ project, index = 0 }: { project: Project; index?: number }) {
   return (
-    <Link
-      className={`project-card format-${project.format} accent-${project.accent}`}
-      href={`/trabalhos/${project.slug}`}
-    >
+    <article className={`project-card format-${project.format} accent-${project.accent}`}>
       <div className="project-visual">
         <Image
           src={index % 2 === 0 ? "/media/hero-collage.png" : "/media/vertical-collage.png"}
@@ -15,7 +11,7 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
           fill
           sizes="(max-width: 768px) 94vw, 48vw"
         />
-        <span className="view-project">VER PROJETO ↗</span>
+        <span className="view-project">CASE EM BREVE</span>
       </div>
       <div className="project-meta">
         <p>
@@ -27,6 +23,6 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
           <strong>{project.result}</strong>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

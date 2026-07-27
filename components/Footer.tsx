@@ -16,8 +16,9 @@ export function Footer() {
         <div>
           <span>MAPA</span>
           <Link href="/trabalhos">Trabalhos</Link>
-          <Link href="/servicos">Serviços</Link>
-          <Link href="/sobre">Sobre</Link>
+          <Link href="/#servicos">Serviços</Link>
+          <Link href="/#sobre">Sobre</Link>
+          <Link href="/#contato">Contato</Link>
         </div>
         <div>
           <span>CONTATO</span>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ContactForm } from "@/components/ContactForm";
 import { MotionReveal } from "@/components/MotionReveal";
 import { PageShell } from "@/components/PageShell";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -32,11 +33,35 @@ const videoSchema = {
   duration: "PT1M18S",
 };
 
+const servicesSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Marketing digital e produção audiovisual",
+  provider: {
+    "@type": "Organization",
+    name: "Café com Marketing",
+  },
+  areaServed: "Brasil",
+};
+
+const team = [
+  ["Dani Freiman", "Estratégia & direção criativa", "Salva referências demais e usa quase todas."],
+  ["Bia Costa", "Conteúdo & social", "Ouve o áudio antes de responder a pauta."],
+  ["Rafa Lima", "Direção audiovisual", "Sempre pede mais um take. Quase sempre tem razão."],
+  ["Leo Martins", "Edição & motion", "Sabe exatamente em qual frame o corte deve cair."],
+] as const;
+
+const values = [
+  ["Clareza antes do hype", "A tendência pode entrar. A estratégia precisa ficar."],
+  ["Ideia com acabamento", "Conceito bom também merece áudio limpo e corte no frame certo."],
+  ["Proximidade de verdade", "Sem parede entre quem pensa, quem produz e quem atende."],
+  ["Curiosidade sempre ligada", "A internet muda rápido. A gente gosta de acompanhar de perto."],
+] as const;
 export default function Home() {
   return (
     <PageShell>
       <div id="conteudo">
-        <section className="hero">
+        <section id="inicio" className="hero">
           <div className="hero-media" aria-hidden="true">
             <Image
               src="/media/hero-collage.png"
@@ -61,7 +86,7 @@ export default function Home() {
               <Link className="button button-cream" href="/trabalhos">
                 Ver nossos trabalhos <span>↗</span>
               </Link>
-              <Link className="text-link light" href="/contato">
+              <Link className="text-link light" href="/#contato">
                 Falar com a equipe →
               </Link>
             </div>
@@ -212,7 +237,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="services-home section-pad">
+        <section id="servicos" className="services-home section-pad">
           <MotionReveal className="section-heading split-heading">
             <div>
               <p className="eyebrow">O QUE A GENTE FAZ</p>
@@ -226,13 +251,13 @@ export default function Home() {
           </MotionReveal>
           <div className="service-list">
             {services.map((service) => (
-              <Link href="/servicos" className="service-row" key={service.number}>
+              <article className="service-row" key={service.number}>
                 <span>{service.number}</span>
                 <h3>{service.title}</h3>
                 <p>{service.copy}</p>
                 <b>{service.tag}</b>
                 <i aria-hidden="true">↗</i>
-              </Link>
+              </article>
             ))}
           </div>
         </section>
@@ -277,7 +302,7 @@ export default function Home() {
               Tem planejamento, improviso, cabo que some, roteiro rabiscado e uma
               equipe que sabe a hora de insistir em “só mais um”.
             </p>
-            <Link href="/sobre" className="text-link light">
+            <Link href="#equipe" className="text-link light">
               Conheça a equipe →
             </Link>
           </MotionReveal>
@@ -288,6 +313,66 @@ export default function Home() {
           </span>
         </section>
 
+        <section id="sobre" className="about-home">
+          <div className="about-intro section-pad">
+            <MotionReveal>
+              <p className="eyebrow">A NOSSA HISTÓRIA</p>
+              <h2>
+                A Café nasceu para juntar o que nunca deveria ter sido separado:
+                <em> estratégia e conteúdo que dá vontade de ver.</em>
+              </h2>
+            </MotionReveal>
+            <div>
+              <p>
+                A gente acredita em repertório, contexto e execução. Em entender a
+                marca antes de abrir o arquivo. Em fazer conteúdo bonito — mas
+                bonito por um motivo.
+              </p>
+              <p>
+                Trabalhamos como estúdio e pensamos como parceiro: equipe próxima,
+                conversa franca e gente que acompanha o que colocou no ar.
+              </p>
+            </div>
+          </div>
+
+          <div className="values section-pad">
+            {values.map(([title, copy], index) => (
+              <MotionReveal className="value-item" key={title} delay={index * 0.06}>
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </MotionReveal>
+            ))}
+          </div>
+
+          <div id="equipe" className="team section-pad">
+            <MotionReveal className="section-heading">
+              <p className="eyebrow light">QUEM FAZ ACONTECER</p>
+              <h2>
+                Gente que pensa,
+                <em> grava, corta e posta.</em>
+              </h2>
+            </MotionReveal>
+            <div className="team-grid">
+              {team.map(([name, role, note], index) => (
+                <article className="team-card" key={name}>
+                  <div className="team-photo">
+                    <Image
+                      src="/media/vertical-collage.png"
+                      alt={`Retrato editorial ilustrativo de ${name}`}
+                      fill
+                      sizes="(max-width: 768px) 90vw, 24vw"
+                    />
+                    <span>0{index + 1}</span>
+                  </div>
+                  <h3>{name}</h3>
+                  <p>{role}</p>
+                  <small>{note}</small>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
         <section className="proof section-pad">
           <MotionReveal className="proof-title">
             <p className="eyebrow">TRABALHO BOM DÁ ASSUNTO</p>
@@ -323,32 +408,41 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="final-cta">
-          <div className="cta-noise" aria-hidden="true" />
-          <MotionReveal>
-            <p className="eyebrow light">TEM UMA IDEIA AÍ?</p>
-            <h2>
-              Sua próxima ideia merece
-              <em> sair do rascunho.</em>
+        <section id="contato" className="contact-page" aria-labelledby="contact-title">
+          <header className="contact-intro">
+            <p className="eyebrow light">ABRE O JOGO</p>
+            <h2 id="contact-title">
+              Conta a ideia.
+              <em> O café é por nossa conta.</em>
             </h2>
             <p>
-              Conte para a gente o que sua marca precisa. Nós transformamos em
-              estratégia, conteúdo e vídeo.
+              Pode chegar com briefing pronto, áudio de cinco minutos ou aquela
+              ideia que ainda não cabe em uma frase. A gente começa daí.
             </p>
-            <div>
-              <Link className="button button-cream" href="/contato">
-                Começar um projeto ↗
-              </Link>
-              <a className="text-link light" href="https://wa.me/5511999999999">
-                Chamar no WhatsApp →
+            <div className="contact-channels">
+              <a href="https://wa.me/5511999999999">
+                <span>WHATSAPP</span>
+                (11) 99999-9999 ↗
+              </a>
+              <a href="mailto:oi@cafecommarketing.com.br">
+                <span>E-MAIL</span>
+                oi@cafecommarketing.com.br ↗
+              </a>
+              <a href="https://instagram.com/seucafecomarketing">
+                <span>INSTAGRAM</span>
+                @seucafecomarketing ↗
               </a>
             </div>
-          </MotionReveal>
+            <small>Prazo médio de resposta: até 2 dias úteis.</small>
+          </header>
+          <div className="contact-form-wrap">
+            <ContactForm />
+          </div>
         </section>
       </div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([servicesSchema, videoSchema]) }}
       />
     </PageShell>
   );
