@@ -3,9 +3,9 @@ import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } fr
 import handler from "vinext/server/app-router-entry";
 
 interface Env {
-  ASSETS: Fetcher;
+  ASSETS?: Fetcher;
   DB: D1Database;
-  IMAGES: {
+  IMAGES?: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
         output(options: { format: string; quality: number }): Promise<{ response(): Response }>;
@@ -30,13 +30,31 @@ const worker = {
     const url = new URL(request.url);
 
     if (url.pathname === "/_vinext/image") {
+      const sourcePath = url.searchParams.get("url");
+      const assets = env.ASSETS;
+
+      // The local Vite runtime may start before the ASSETS binding is ready.
+      // Serve local public files directly instead of crashing the image route.
+      if (!assets) {
+        if (sourcePath?.startsWith("/")) {
+          return Response.redirect(new URL(sourcePath, request.url), 307);
+        }
+        return new Response("Image assets are unavailable", { status: 503 });
+      }
+
+      const images = env.IMAGES;
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       return handleImageOptimization(request, {
-        fetchAsset: (path) => env.ASSETS.fetch(new Request(new URL(path, request.url))),
-        transformImage: async (body, { width, format, quality }) => {
-          const result = await env.IMAGES.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
-          return result.response();
-        },
+        fetchAsset: (path) => assets.fetch(new Request(new URL(path, request.url))),
+        transformImage: images
+          ? async (body, { width, format, quality }) => {
+              const result = await images
+                .input(body)
+                .transform(width > 0 ? { width } : {})
+                .output({ format, quality });
+              return result.response();
+            }
+          : undefined,
       }, allowedWidths);
     }
 
