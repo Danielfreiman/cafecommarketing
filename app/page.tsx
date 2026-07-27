@@ -14,7 +14,7 @@ import {
 } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Início",
+  title: { absolute: "Café com Marketing | Conteúdo que faz sua marca aparecer" },
   description:
     "Conteúdo, estratégia e produção audiovisual para marcas que querem aparecer, conectar e ficar na memória.",
   alternates: { canonical: "/" },
